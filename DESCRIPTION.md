@@ -1,15 +1,15 @@
-# Repository Description
+# Research Design Ladder
 
-Version: `v1.0.0`
+GitHub description:
 
-## GitHub Description
-
-Codex skill for turning raw research ideas into paper-ready study designs, staged experiments, validation plans, and manuscript evidence packages.
+```text
+Codex skill for generating full-depth adaptive research design documents in a protocol-style Markdown structure.
+```
 
 ## 中文简介
 
-`research-design-ladder` 是一个 Codex skill，用于把初步研究想法转化为论文导向的研究设计，包括研究问题、假设链、证据链、分阶段实验、基线、指标、验证计划、风险分析和 manuscript evidence package。
+`research-design-ladder` 是一个 Codex skill，用于把早期研究想法整理成完整、可执行、可投稿或可立项的 Markdown 研究设计文档。它保留参考文档的组织结构、论证节奏、风险提示方式、阶段性预期结果写法和中等句长表达习惯，但不会机械复用参考文档中的具体实验结构。
 
 ## English Summary
 
-`research-design-ladder` is a Codex skill for transforming raw research ideas into paper-ready study designs, including research questions, hypothesis chains, evidence chains, staged experiments, baselines, metrics, validation plans, risk analysis, and manuscript evidence packages.
+`research-design-ladder` is a Codex skill for turning early research ideas into full-depth Markdown study design documents. It preserves a protocol-like structure, argument rhythm, staged expected-result writing, and risk-control style while adapting the actual modules to the topic type.

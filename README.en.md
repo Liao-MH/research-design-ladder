@@ -1,95 +1,89 @@
 # Research Design Ladder
 
-Current version: `v1.0.0`
+Version: `v1.1.0`
 
-`research-design-ladder` is a Codex skill for turning early research ideas into paper-oriented study designs. It works backward from the final manuscript claim to the required evidence chain, then helps produce research questions, falsifiable hypotheses, staged experiments, baselines, metrics, validation plans, expected-result interpretation matrices, and manuscript evidence packages.
+`research-design-ladder` is a Codex skill for turning a new research topic, early idea, or experimental direction into a full Markdown study design document. Its purpose is not to reuse a fixed experiment checklist. It helps Codex collect or infer the required context first, then write a protocol-style document with research positioning, core questions, overall architecture, staged modules, validation, quality control, risk interpretation, execution order, minimum deliverable, enhanced versions, title options, and final logic chain.
 
-## Repository Description
+The skill preserves the reference document's structure style, argumentative rhythm, risk-warning pattern, staged expected-result writing, and moderate sentence-length expression habits. It does not mechanically copy the reference document's concrete experiment structure, such as model comparison, backbone comparison, ablation, upper-bound training, fair comparison, prognosis analysis, or clinical utility evaluation.
 
-**Description:** Codex skill for turning raw research ideas into paper-ready study designs, staged experiments, validation plans, and manuscript evidence packages.
+## Triggers
 
-## When To Use
+Use it in Codex with prompts such as:
 
-- You have an early paper idea but need a sharper publishable research question.
-- You need an experiment matrix, baselines, metrics, statistical validation, or robustness checks.
-- You want to elevate a technical comparison into a scientific, clinical, or application-level evidence chain.
-- You need to assess whether a study design is convincing enough for submission or review.
+- "帮我设计一个课题"
+- "生成研究设计文档"
+- "把这个想法整理成完整实验方案"
+- "帮我写一个 protocol / study design"
+- "生成类似之前那种完整设计文档"
+- "Use `$research-design-ladder` for this topic"
 
-## Installation
+## Output
 
-Clone this repository into your Codex skills directory:
+The default output is a complete long-form Markdown document, not a summary or compressed outline. Unless the user explicitly asks for a short version, summary, or framework only, the skill instructs Codex to expand each section with concrete reasoning, execution steps, expected outputs, success criteria, failure signals, and how each module supports the final claim.
 
-```bash
-mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-git clone https://github.com/Liao-MH/research-design-ladder.git "${CODEX_HOME:-$HOME/.codex}/skills/research-design-ladder"
-```
-
-If the directory already exists locally, update it with:
-
-```bash
-cd "${CODEX_HOME:-$HOME/.codex}/skills/research-design-ladder"
-git pull
-```
-
-## Usage
-
-After installation, ask Codex something like:
+Default output path:
 
 ```text
-Use this idea to design a publishable research project: compare different foundation models for pathology-image prognosis.
+docs/plans/YYYY-MM-DD-<topic>-study-design.md
 ```
 
-You can also request a specific output mode:
+If the current directory is not a repository, or if a safe output location cannot be inferred, Codex should ask for or propose a suitable path.
 
-```text
-Use research-design-ladder to create an experiment matrix.
-```
+## Adaptive Design
 
-```text
-Check whether this research design is submission-ready and identify missing evidence.
-```
+The skill selects modules according to the topic type.
 
-## Output Modes
+Machine learning studies may include data and split policy, label definition, model or method route, metrics, justified baselines, robustness analysis, and error analysis. Baselines appear only when they rule out a relevant alternative explanation.
 
-- Short Design Diagnosis: a compact assessment of the paper angle, contribution type, major weaknesses, and next actions.
-- Full Research Design: a full plan with research questions, hypothesis chain, evidence chain, data design, model design, validation plan, and manuscript package.
-- Experiment Matrix: staged experiments with variables, fixed controls, metrics, expected outputs, and gates.
-- Review-Readiness Check: a manuscript evidence audit for submission or review strength.
+Experimental science studies may include study object, sample or material design, experimental conditions, measurement indicators, statistical analysis, quality control, and null-result interpretation. Group comparison appears only when the topic actually has groups, controls, or conditions.
+
+System development studies may include user needs, use cases, system architecture, module responsibilities, data flow, state flow, permission model, testing and acceptance criteria, deployment, maintenance, and operational risks. Non-comparative system design should not receive forced ablation or model-comparison sections.
+
+Theory or methodology studies may include problem definition, notation and assumptions, derivation route, proof checkpoints, boundary cases, counterexamples, toy examples, applicability limits, and criteria for theoretical contribution.
+
+Literature review or proposal work may include background and gap, scope, inclusion/exclusion criteria, search or source strategy, screening logic, thematic framework, evidence map, expected contribution, feasibility, and risks of broad scope or weak synthesis.
 
 ## Repository Layout
 
 ```text
-research-design-ladder/
+.
 ├── SKILL.md
+├── VERSION
 ├── agents/
 │   └── openai.yaml
 ├── references/
-│   ├── experiment-matrix-template.md
-│   ├── framework-template.md
-│   └── manuscript-evidence-checklist.md
+│   ├── adaptation-rules.md
+│   ├── document-structure-template.md
+│   ├── intake-checklist.md
+│   ├── quality-rubric.md
+│   └── style-guide.md
 ├── docs/
 │   ├── CHANGELOG.md
 │   └── DEMANDS.MD
-├── DESCRIPTION.md
-├── README.md
-├── README.en.md
-├── VERSION
 └── tests/
     └── release-version.test.mjs
 ```
 
-## Development And Validation
+## Local Installation
+
+Install the repository contents into:
+
+```text
+~/.codex/skills/research-design-ladder
+```
+
+Restart Codex, or start a new session, so the local skills index can be refreshed.
+
+## Validation
+
+Run the lightweight release check:
 
 ```bash
 node tests/release-version.test.mjs
-python3 /path/to/skill-creator/scripts/quick_validate.py .
-git diff --check
 ```
 
-`quick_validate.py` is bundled with Codex's system `skill-creator` skill. Replace the path with the matching local script path. If the script reports a missing `PyYAML` dependency, install it in an isolated venv or conda environment rather than the main Python environment.
+You can also validate the skill metadata with Codex's skill-creator script:
 
-## Maintenance Rules
-
-- Update `VERSION`, `README.md`, `README.en.md`, `docs/DEMANDS.MD`, and `docs/CHANGELOG.md` for every release.
-- If the trigger description in `SKILL.md` changes, verify that `agents/openai.yaml` still describes the skill accurately.
-- README files are repository documentation. The runtime skill instructions remain centered in `SKILL.md` and `references/`.
+```bash
+python /Users/lmh/.codex/skills/.system/skill-creator/scripts/quick_validate.py .
+```

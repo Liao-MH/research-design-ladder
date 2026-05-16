@@ -1,63 +1,67 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { fileURLToPath } from "node:url";
+import fs from "node:fs";
+import path from "node:path";
+import assert from "node:assert/strict";
 
-const repoRoot = fileURLToPath(new URL("..", import.meta.url));
-const read = (path) => readFileSync(join(repoRoot, path), "utf8");
+const root = process.cwd();
+const version = fs.readFileSync(path.join(root, "VERSION"), "utf8").trim();
 
-const version = read("VERSION").trim();
+assert.match(version, /^v\d+\.\d+\.\d+$/, "VERSION must use semantic version format vX.Y.Z");
 
-if (!/^v\d+\.\d+\.\d+$/.test(version)) {
-  throw new Error(`VERSION must use semantic format vX.Y.Z, got: ${version}`);
-}
-
-const versionedFiles = [
+const requiredFiles = [
+  "SKILL.md",
+  "VERSION",
+  "DESCRIPTION.md",
   "README.md",
   "README.en.md",
-  "DESCRIPTION.md",
-  "docs/DEMANDS.MD",
+  "agents/openai.yaml",
   "docs/CHANGELOG.md",
+  "docs/DEMANDS.MD",
+  "references/adaptation-rules.md",
+  "references/document-structure-template.md",
+  "references/intake-checklist.md",
+  "references/quality-rubric.md",
+  "references/style-guide.md",
 ];
 
-for (const path of versionedFiles) {
-  const content = read(path);
-  if (!content.includes(version)) {
-    throw new Error(`${path} must include current version ${version}`);
-  }
+for (const file of requiredFiles) {
+  assert.ok(fs.existsSync(path.join(root, file)), `${file} must exist`);
 }
 
-const skill = read("SKILL.md");
-const frontmatterMatch = skill.match(/^---\n([\s\S]*?)\n---\n/);
+const removedLegacyReferences = [
+  "references/experiment-matrix-template.md",
+  "references/framework-template.md",
+  "references/manuscript-evidence-checklist.md",
+];
 
-if (!frontmatterMatch) {
-  throw new Error("SKILL.md must start with YAML frontmatter.");
+for (const file of removedLegacyReferences) {
+  assert.ok(!fs.existsSync(path.join(root, file)), `${file} should not be present in v1.1.0`);
 }
 
-const frontmatterKeys = frontmatterMatch[1]
-  .split("\n")
-  .map((line) => line.split(":")[0].trim())
-  .filter(Boolean);
+const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
+assert.ok(skill.includes("name: research-design-ladder"), "SKILL.md must define the canonical skill name");
+assert.ok(skill.includes(`Version: ${version}`), "SKILL.md version must match VERSION");
+assert.ok(skill.includes("references/intake-checklist.md"), "SKILL.md must point to the intake checklist");
+assert.ok(skill.includes("references/adaptation-rules.md"), "SKILL.md must point to adaptation rules");
+assert.ok(skill.includes("references/document-structure-template.md"), "SKILL.md must point to the document template");
+assert.ok(skill.includes("references/style-guide.md"), "SKILL.md must point to the style guide");
+assert.ok(skill.includes("references/quality-rubric.md"), "SKILL.md must point to the quality rubric");
 
-const allowedKeys = new Set(["name", "description"]);
-for (const key of frontmatterKeys) {
-  if (!allowedKeys.has(key)) {
-    throw new Error(`SKILL.md frontmatter contains unsupported key: ${key}`);
-  }
-}
+const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
+const readmeEn = fs.readFileSync(path.join(root, "README.en.md"), "utf8");
+const changelog = fs.readFileSync(path.join(root, "docs/CHANGELOG.md"), "utf8");
+const demands = fs.readFileSync(path.join(root, "docs/DEMANDS.MD"), "utf8");
+const agents = fs.readFileSync(path.join(root, "agents/openai.yaml"), "utf8");
 
-if (!frontmatterMatch[1].includes("name: research-design-ladder")) {
-  throw new Error("SKILL.md frontmatter must name the skill research-design-ladder.");
-}
+assert.ok(readme.includes(version), "README.md must mention current version");
+assert.ok(readmeEn.includes(version), "README.en.md must mention current version");
+assert.ok(changelog.includes(`## ${version} - 2026-05-16`), "CHANGELOG.md must include current release entry");
+assert.ok(demands.includes(`## ${version} - 2026-05-16`), "DEMANDS.MD must include current demand entry");
+assert.ok(agents.includes("Research Design Ladder"), "agents/openai.yaml must expose a display name");
+assert.ok(agents.includes("$research-design-ladder"), "agents/openai.yaml default prompt must mention the skill handle");
 
-if (!frontmatterMatch[1].includes("description:")) {
-  throw new Error("SKILL.md frontmatter must include a description.");
-}
-
-const openaiYaml = read("agents/openai.yaml");
-for (const required of ["display_name:", "short_description:", "default_prompt:"]) {
-  if (!openaiYaml.includes(required)) {
-    throw new Error(`agents/openai.yaml must include ${required}`);
-  }
-}
+const adaptationRules = fs.readFileSync(path.join(root, "references/adaptation-rules.md"), "utf8");
+assert.ok(adaptationRules.includes("Anti-Transplant Rule"), "adaptation rules must retain the anti-transplant rule");
+assert.ok(adaptationRules.includes("System Development"), "adaptation rules must support system development topics");
+assert.ok(adaptationRules.includes("Theory or Methodology"), "adaptation rules must support theory or methodology topics");
 
 console.log(`release-version.test.mjs passed for ${version}`);

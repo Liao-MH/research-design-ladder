@@ -1,4 +1,4 @@
 interface:
   display_name: "Research Design Ladder"
-  short_description: "Turn a research idea into a paper-ready study design."
-  default_prompt: "Design a publishable research project from this idea, including research questions, hypotheses, staged experiments, baselines, metrics, validation, expected results, risks, and manuscript evidence."
+  short_description: "Write reference-style study designs."
+  default_prompt: "Use $research-design-ladder to turn this research idea into a full-depth adaptive Markdown study design in the reference document's protocol style."
