@@ -4,6 +4,8 @@ Use this checklist before delivering a generated research design document.
 
 ## Structure
 
+- Intake behavior asks detailed foundational questions before drafting unless the user explicitly asks to proceed with assumptions.
+- Missing foundational information is not silently replaced by internal inference.
 - Opening metadata includes date, status, applicable topic, and core goal.
 - The document starts with research positioning before methods.
 - Core questions, hypotheses, objectives, or design claims appear before detailed modules.

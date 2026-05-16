@@ -34,7 +34,7 @@ const removedLegacyReferences = [
 ];
 
 for (const file of removedLegacyReferences) {
-  assert.ok(!fs.existsSync(path.join(root, file)), `${file} should not be present in v1.1.0`);
+  assert.ok(!fs.existsSync(path.join(root, file)), `${file} should not be present in ${version}`);
 }
 
 const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
@@ -63,5 +63,23 @@ const adaptationRules = fs.readFileSync(path.join(root, "references/adaptation-r
 assert.ok(adaptationRules.includes("Anti-Transplant Rule"), "adaptation rules must retain the anti-transplant rule");
 assert.ok(adaptationRules.includes("System Development"), "adaptation rules must support system development topics");
 assert.ok(adaptationRules.includes("Theory or Methodology"), "adaptation rules must support theory or methodology topics");
+
+const intakeChecklist = fs.readFileSync(path.join(root, "references/intake-checklist.md"), "utf8");
+assert.ok(
+  intakeChecklist.includes("Detailed Intake First"),
+  "intake checklist must make detailed user questioning the default behavior",
+);
+assert.ok(
+  intakeChecklist.includes("Do not replace missing foundational information with internal inference"),
+  "intake checklist must prevent replacing foundational information with inference",
+);
+assert.ok(
+  skill.includes("Ask detailed intake questions before drafting"),
+  "SKILL.md workflow must require detailed intake questions before drafting",
+);
+assert.ok(
+  !intakeChecklist.includes("Infer first; ask only"),
+  "intake checklist must no longer instruct the agent to infer first and ask only when necessary",
+);
 
 console.log(`release-version.test.mjs passed for ${version}`);

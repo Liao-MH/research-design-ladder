@@ -5,7 +5,7 @@ description: Use when the user asks to design a research topic, generate a resea
 
 # Research Design Ladder
 
-Version: v1.1.0
+Version: v1.2.0
 
 ## Purpose
 
@@ -16,8 +16,9 @@ The default output is a complete long document, not a summary or compressed outl
 ## Workflow
 
 1. Gather context with `references/intake-checklist.md`.
-   - Infer from the prompt, current repository, supplied paths, existing files, logs, or notes before asking.
-   - Ask concise questions only when a key design decision cannot be inferred safely.
+   - Ask detailed intake questions before drafting, especially for foundational research information.
+   - Do not replace missing foundational information with internal inference; use inference only to summarize what the user already provided, inspect explicit file paths, or offer clearly labeled options.
+   - If the user asks to proceed without answering, document assumptions and mark unresolved decisions explicitly.
    - If the user wants a file and gives no path, use the default file behavior below.
 
 2. Select adaptive modules with `references/adaptation-rules.md`.

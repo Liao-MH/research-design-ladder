@@ -1,10 +1,12 @@
 # Research Design Ladder
 
-Version: `v1.1.0`
+Version: `v1.2.0`
 
 `research-design-ladder` is a Codex skill for turning a new research topic, early idea, or experimental direction into a full Markdown study design document. Its purpose is not to reuse a fixed experiment checklist. It helps Codex collect or infer the required context first, then write a protocol-style document with research positioning, core questions, overall architecture, staged modules, validation, quality control, risk interpretation, execution order, minimum deliverable, enhanced versions, title options, and final logic chain.
 
 The skill preserves the reference document's structure style, argumentative rhythm, risk-warning pattern, staged expected-result writing, and moderate sentence-length expression habits. It does not mechanically copy the reference document's concrete experiment structure, such as model comparison, backbone comparison, ablation, upper-bound training, fair comparison, prognosis analysis, or clinical utility evaluation.
+
+Starting from `v1.2.0`, the intake stage defaults to detailed user questioning rather than internal inference. Codex should infer only when the user explicitly asks for a fast draft, has already provided sufficient information, or supplies file paths to inspect. Inferred items and unresolved decisions must be labeled before drafting.
 
 ## Triggers
 
@@ -20,6 +22,8 @@ Use it in Codex with prompts such as:
 ## Output
 
 The default output is a complete long-form Markdown document, not a summary or compressed outline. Unless the user explicitly asks for a short version, summary, or framework only, the skill instructs Codex to expand each section with concrete reasoning, execution steps, expected outputs, success criteria, failure signals, and how each module supports the final claim.
+
+Before drafting, the skill asks detailed intake questions about the topic, field, goal, research question, object, available resources, method route, baseline or control status, study mode, evaluation criteria, target output, application scenario, constraints, existing paths, and output path. The user can answer "unknown", "not applicable", or "please propose options"; those answers become explicit open decisions rather than hidden assumptions.
 
 Default output path:
 
